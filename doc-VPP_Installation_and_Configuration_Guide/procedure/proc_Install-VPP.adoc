@@ -1,0 +1,43 @@
+[id='Installing_VPP_{context}'']
+= Install VPP RPMs
+
+// Included in:
+// Installation Guide:
+
+The following describes steps needed to install VPP. 
+
+.Procedure
+
+. Verify your system is registered with the Content Delivery Network and VPP is available to install:
++
+[options="nowrap" subs="+quotes,verbatim"]
+----
+# yum --disablerepo "*" --enablerepo "rhel-7-fdio-early-access-rpms" list available
+Loaded plugins: product-id, search-disabled-repos, subscription-manager
+Available Packages
+vpp.x86_64                               18.04-1                rhel-7-fdio-early-access-rpms
+vpp-api-java.x86_64                      18.04-1                rhel-7-fdio-early-access-rpms
+vpp-api-lua.x86_64                       18.04-1                rhel-7-fdio-early-access-rpms
+vpp-api-python.x86_64                    18.04-1                rhel-7-fdio-early-access-rpms
+vpp-devel.x86_64                         18.04-1                rhel-7-fdio-early-access-rpms
+vpp-lib.x86_64                           18.04-1                rhel-7-fdio-early-access-rpms
+vpp-plugins.x86_64                       18.04-1                rhel-7-fdio-early-access-rpms
+vpp-selinux-policy.x86_64                18.04-1                rhel-7-fdio-early-access-rpms
+----
++
+[NOTE]
+====
+If VPP is already installed, the previous command will not have any output. In that case, use:
+[options="nowrap" subs="+quotes,verbatim"]
+----
+# yum list installed | grep vpp
+----
+If it appears that VPP is not installed, go back to the <<Enabling_the_Red_Hat_Enterprise_Linux_Repositories_{context}>> and verify the `rhel-7-fdio-early-access-rpms` repository is enabled.
+====
+. Install the desired packages:
++
+[options="nowrap" subs="+quotes,verbatim"]
+----
+# yum install vpp vpp-lib vpp-plugins vpp-devel vpp-api-python vpp-api-lua vpp-api-java vpp-selinux-policy
+----
+

@@ -1,0 +1,16 @@
+[id='Install-VPP']
+= Installing VPP on Red Hat Enterprise Linux
+
+// Included in:
+// Install
+
+:imagesdir: ../images
+:tskdir: ../procedure
+:cptdir: ../concept
+
+include::{tskdir}/proc_Enabling-RHEL-Repositories.adoc[leveloffset=+1]
+
+include::{cptdir}/concept_packages.adoc[leveloffset=+1]
+
+include::{tskdir}/proc_Install-VPP.adoc[leveloffset=+1]
+

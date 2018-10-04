@@ -1,0 +1,348 @@
+= Configuring VPP
+[id="config-vpp"]
+
+After a successful installation, VPP installs a startup config file named _startup.conf_ in the _/etc/vpp/_ directory. This file can be tailored to make VPP run as desired, but contains default values for typical installations.
+
+Below are more details about this file and the parameters and values it contains.
+
+== Introduction
+
+The VPP network stack comes with several configuration options that can be provided either on the command line when VPP is started, or in a configuration file. Specific applications built on the stack have been known to require a dozen arguments, depending on requirements.
+
+== Command-line Arguments
+
+Parameters are grouped by a section name. When providing more than one parameter to a section, all parameters for that section must be wrapped in curly braces. For example, to start VPP with configuration data via the command line with the section name ‘unix’:
+[options="nowrap" subs="+quotes,verbatim"]
+----
+$ sudo /usr/bin/vpp unix { interactive cli-listen 127.0.0.1:5002 }
+----
+The command line can be presented as a single string or as several; anything given on the command line is concatenated with spaces into a single string before parsing. VPP applications must be able to locate their own executable images. The simplest way to ensure this will work is to invoke a VPP application by giving its absolute path. For example: _‘/usr/bin/vpp <options>’_ At startup, VPP applications parse through their own ELF-sections [primarily] to make lists of init, configuration, and exit handlers.
+
+When developing with VPP, in gdb it’s often sufficient to start an application like this:
+[options="nowrap" subs="+quotes,verbatim"]
+----
+(gdb) run unix interactive
+----
+
+== Configuration File
+
+It is also possible to supply the configuration parameters in a startup configuration. The path of the file is provided to the VPP application on its command line. The format of the configuration file is a simple text file with the same content as the command line, but with the benefit of being able to use newlines to make the content easier to read. For example:
+[options="nowrap" subs="+quotes,verbatim"]
+----
+$ cat /etc/vpp/startup.conf
+unix {
+  nodaemon
+  log /var/log/vpp/vpp.log
+  full-coredump
+  cli-listen localhost:5002
+}
+
+api-trace {
+  on
+}
+
+dpdk {
+  dev 0000:03:00.0
+}
+----
+VPP is then instructed to load this file with the -c option. For example:
+[options="nowrap" subs="+quotes,verbatim"]
+----
+$ sudo /usr/bin/vpp -c /etc/vpp/startup.conf
+----
+When the VPP service is started, VPP is started with this option via another installed file, _/usr/lib/systemd/system/vpp.service_. See ‘ExecStart’ the sample file below:
+[options="nowrap" subs="+quotes,verbatim"]
+----
+$ cat /lib/systemd/system/vpp.service
+[Unit]
+Description=vector packet processing engine
+After=network.target
+
+[Service]
+Type=simple
+ExecStartPre=-/bin/rm -f /dev/shm/db /dev/shm/global_vm /dev/shm/vpe-api
+ExecStartPre=-/sbin/modprobe uio_pci_generic
+ExecStart=/usr/bin/vpp -c /etc/vpp/startup.conf
+ExecStopPost=/bin/rm -f /dev/shm/db /dev/shm/global_vm /dev/shm/vpe-api
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+----
+
+== Configuration Parameters
+
+Below is the list of section names and their associated parameters. This is not an exhaustive list of parameters available. The command-line argument parsers can be found in the source code by searching for instances of the VLIB_CONFIG_FUNCTION and VLIB_EARLY_CONFIG_FUNCTION macro.
+
+For example, the invocation ‘VLIB_CONFIG_FUNCTION (foo_config, “foo”)’ will cause the function ‘foo_config’ to receive all parameters given in a parameter block named “foo”: “foo { arg1 arg2 arg3 … }”.
+
+=== “unix” Parameters
+
+Configure VPP startup and behavior type attributes, as well and any OS based attributes.
+
+interactive:: 
+Attach CLI to stdin/out and provide a debugging command line interface. Implies nodaemon. +
+*Example:* interactive
+nodaemon::
+Do not fork / background the vpp process. Typical when invoking VPP applications from a process monitor. Set by default in the default ‘startup.conf’ file. +
+*Example:* nodaemon
+log <filename>::
+Logs the startup configuration and all subsequent CLI commands in filename. Very useful in situations where folks don’t remember or can’t be bothered to include CLI commands in bug reports. The default ‘startup.conf’ file is to write to ‘/var/log/vpp/vpp.log’. +
+In VPP 18.04, the default log file location was moved from ‘/tmp/vpp.log’ to ‘/var/log/vpp/vpp.log’ . The VPP code is indifferent to the file location. However, if SELinux is enabled, then the new location is required for the file to be properly labeled. Check your local ‘startup.conf’ file for the log file location on your system. +
+*Example:* log /var/log/vpp/vpp-debug.log
+exec|startup-config <filename>::
+Read startup operational configuration from filename. The contents of the file will be performed as though entered at the CLI. The two keywords (`exec` and `startup-config`) are aliases for the same function; if both are specified, only the last will have an effect. +
+*Example:* startup-config /usr/share/vpp/scripts/interface-up.txt +
++
+The file contains CLI commands, for example:
++
+[options="nowrap" subs="+quotes,verbatim"]
+----
+$ cat /usr/share/vpp/scripts/interface-up.txt
+set interface state TenGigabitEthernet1/0/0 up
+set interface state TenGigabitEthernet1/0/1 up
+----
+gid number|name>::
+Sets the effective group ID to the input group ID or group name of the calling process. +
+*Example:* gid vpp
+full-coredump::
+Ask the Linux kernel to dump all memory-mapped address regions, instead of just text+data+bss. +
+*Example:* full-coredump
+coredump-size unlimited|<n>G|<n>M|<n>K|<n>::
+Set the maximum size of the coredump file. The input value can be set in GB, MB, KB or bytes, or set to ‘unlimited’. +
+*Example:* coredump-size unlimited
+cli-listen <ipaddress:port>|<socket-path>::
+Bind the CLI to listen at address localhost on TCP port 5002. This will accept an ipaddress:port pair or a filesystem path; in the latter case a local Unix socket is opened instead. The default _‘startup.conf’_ file is to open the socket _‘/run/vpp/cli.sock’_. +
+*Example:* cli-listen localhost:5002 +
+*Example:* cli-listen /run/vpp/cli.sock
+cli-line-mode::
+Disable character-by-character I/O on stdin. Useful when combined with, for example, emacs M-x gud-gdb. +
+*Example:* cli-line-mode
+cli-prompt <string>::
+Configure the CLI prompt to be string. +
+*Example:* cli-prompt vpp-2
+cli-history-limit <n>::
+Limit commmand history to <n> lines. A value of 0 disables command history. +
+*Default value:* 50 +
+*Example:* cli-history-limit 100
+cli-no-banner::
+Disable the login banner on stdin and Telnet connections. +
+*Example:* cli-no-banner
+cli-no-pager::
+Disable the output pager. +
+*Example:* cli-no-pager
+cli-pager-buffer-limit <n>::
+Limit pager buffer to <n> lines of output. A value of 0 disables the pager. +
+*Default value:* 100000 +
+*Example:* cli-pager-buffer-limit 5000
+runtime-dir <dir>::
+Set the runtime directory, which is the default location for certain files, like socket files. Default is based on User ID used to start VPP. Typically it is ‘root’, which defaults to ‘/run/vpp/’. Otherwise, defaults to ‘/run/user/<uid>/vpp/’. +
+*Example:* runtime-dir /tmp/vpp
+poll-sleep-usec <n>::
+Add a fixed-sleep between main loop poll. +
+*Default value:* 0, which is not to sleep. +
+*Example:* poll-sleep-usec 100
+pidfile <filename>::
+Writes the pid of the main thread in the given filename. +
+*Example:* pidfile /run/vpp/vpp1.pid
+
+=== “dpdk” Parameters
+
+Command line DPDK configuration controls a number of parameters, including device whitelisting, the number of CPUs available for launching dpdk-eal-controlled threads, the number of I/O buffers, and the process affinity mask. In addition, the DPDK configuration function attempts to support all of the DPDK EAL configuration parameters.
+
+All of the DPDK EAL options should be available. See _'../src/plugins/dpdk/device/dpdk_priv.h'_, look at the set of “foreach_eal_XXX” macros.
+
+==== Popular options include:
+
+dev <pci-dev>::
+White-list [as in, attempt to drive] a specific PCI device. PCI-dev is a string of the form “DDDD:BB:SS.F” where: +
+  DDDD = Domain +
+  BB = Bus Number +
+  SS = Slot Number +
+  F = Function +
+This is the same format used in the linux sysfs tree (i.e. /sys/bus/pci/devices) for PCI device directory names. +
+*Example:* dev 0000:02:00.0
+dev <pci-dev> { .. }::
+When whitelisting specific interfaces by specifying PCI address, additional custom parameters can also be specified. Valid options include:
+  num-rx-queues <n>:::
+  Number of receive queues. Also enables RSS. Default value is 1.
+  num-tx-queues <n>:::
+  Number of transmit queues. Default is equal to number of worker threads or 1 if no workers treads.
+  num-rx-desc <n>:::
+  Number of descriptors in receive ring. Increasing or reducing number can impact performance. Default is 1024.
+  num-rt-desc <n>:::
+  Number of descriptors in transmit ring. Increasing or reducing number can impact performance. Default is 1024.
+  vlan-strip-offload on|off:::
+  VLAN strip offload mode for interface. VLAN stripping is off by default for all NICs except VICs, using ENIC driver, which has VLAN stripping on by default.
+  hqos:::
+  Enable the Hierarchical Quaity-of-Service (HQoS) scheduler, default is disabled. This enables HQoS on specific output interface.
+  hqos { .. }:::
+  HQoS can also have its own set of custom parameters. Setting a custom parameter also enables HQoS.
+    hqos-thread <n>::::
+    HQoS thread used by this interface. To setup a pool of threads that are shared by all HQoS interfaces, set via the*’cpu’* section using either ‘corelist-hqos-threads’ or ‘coremask-hqos-threads’.
+Example: :::
+dev 0000:02:00.1 { +
+    num-rx-queues 2 +
+    num-tx-queues 2 +
+}
+vdev <eal-command>::
+Provide a DPDK EAL command to specify bonded Ethernet interfaces, operating modes and PCI addresses of slave links. Only XOR balanced (mode 2) mode is supported. +
+*Example:* +
+vdev eth_bond0,mode=2,slave=0000:0f:00.0,slave=0000:11:00.0,xmit_policy=l34 +
+vdev eth_bond1,mode=2,slave=0000:10:00.0,slave=0000:12:00.0,xmit_policy=l34 +
+num-mbufs <n>::
+Increase number of buffers allocated. May be needed in scenarios with large number of interfaces and worker threads, or a lot of physical interfaces with multiple RSS queues. Value is per CPU socket. +
+*Default value:* 16384. +
+*Example:* num-mbufs 128000
+no-pci::
+When VPP is started, if an interface is not owned by the linux kernel (interface is administratively down), VPP will attempt to manage the interface. ‘no-pci’ indicates that VPP should not walk the PCI table looking for interfaces. +
+*Example:* no-pci
+no-hugetlb::
+Don’t use huge TLB pages. Potentially useful for running simulator images. +
+*Example:* no-hugetlb
+kni <n>::
+Number of KNI interfaces. Refer to the DPDK documentation. +
+*Example:* kni 2
+uio-driver uio_pci_generic|igb_uio|vfio-pci|auto::
+Change UIO driver used by VPP. Default is ‘auto’. +
+*Example:* uio-driver igb_uio
+socket-mem <n>::
+Change hugepages allocation per-socket, needed only if there is need for larger number of mbufs. Default is 64 hugepages on each detected CPU socket. +
+*Example:* socket-mem 2048,2048
+
+==== Other options include:
+
+enable-tcp-udp-checksum::
+Enables UDP/TCP RX checksum offload. +
+*Example:* enable-tcp-udp-checksum
+no-multi-seg::
+Disable mutli-segment buffers, improves performance but disables Jumbo MTU support. +
+*Example:* no-multi-seg
+no-tx-checksum-offload::
+Disables UDP/TCP TX checksum offload. Typically needed for use faster vector PMDs (together with no-multi-seg). +
+*Example:* no-tx-checksum-offload
+decimal-interface-names::
+Format DPDK device names with decimal, as opposed to hexadecimal. +
+*Example:* decimal-interface-names
+log-level emergency|alert|critical|error|warning|notice|info|debug::
+Set the log level for DPDK logs. Default is ‘notice’. +
+*Example:* log-level error
+dev default { .. }::
+Change default settings for all intefaces. This sections supports the same set of custom parameters described in ‘dev <pci-dev> { .. }’. +
+*Example:* +
+dev default { +
+    num-rx-queues 3 +
+    num-tx-queues 3 +
+}
+
+=== “cpu” Parameters
+
+Command-line CPU configuration controls the creation of named thread types, and the cpu affinity thereof. In the VPP there is one main thread and optionally the user can create worker(s). The main thread and worker thread(s) can be pinned to CPU core(s) automatically or manually.
+
+==== Automatic Pinning:
+
+workers <n>::
+Create <n> worker threads. +
+*Example:* workers 4
+io <n>::
+Create <n> i/o threads. +
+*Example:* io 2
+main-thread-io::
+Handle i/o devices from thread 0, hand off traffic to worker threads. Requires “workers <n>”. +
+*Example:* main-thread-io
+skip-cores <n>::
+Sets number of CPU core(s) to be skipped (1 … N-1). Skipped CPU core(s) are not used for pinning main thread and working thread(s). The main thread is automatically pinned to the first available CPU core and worker(s) are pinned to next free CPU core(s) after core assigned to main threadLeave the low nn bits of the process affinity mask clear. +
+*Example:* skip-cores 4
+
+==== Manual Pinning:
+
+main-core <n>::
+Assign main thread to a specific core. +
+*Example:* main-core 1
+coremask-workers <hex-mask>::
+Place worker threads according to the bitmap hex-mask. +
+*Example:* coremask-workers 0x0000000000C0000C
+corelist-workers <list>::
+Same as coremask-workers but accepts a list of cores instead of a bitmap. +
+*Example:* corelist-workers 2-3,18-19
+coremask-io <hex-mask>::
+Place I/O threads according to the bitmap hex-mask. +
+*Example:* coremask-io 0x0000000003000030
+corelist-io <list>::
+Same as coremask-io but accepts a list of cores instead of a bitmap. +
+*Example:* corelist-io 4-5,20-21
+coremask-hqos-threads <hex-mask>::
+Place HQoS threads according to the bitmap hex-mask. A HQoS thread can run multiple HQoS objects each associated with different output interfaces. +
+*Example:* coremask-hqos-threads 0x000000000C0000C0
+corelist-hqos-threads <list>::
+Same as coremask-hqos-threads but accepts a list of cores instead of a bitmap. +
+*Example:* corelist-hqos-threads 6-7,22-23
+
+==== Other:
+
+thread-prefix <prefix>::
+Set a prefix to be prepended to each thread name. The thread name already contains an underscore. If not provided, the default is ‘vpp’. Currently, prefix used on threads: ‘vpp_main’, ‘vpp_stats’ +
+*Example:* thread-prefix vpp1
+scheduler-priority <n>::
+Set the scheduler priority. Only valid if the ‘scheduler-policy’ is set to ‘fifo’ or ‘rr’. The valid ranges for the scheduler priority depends on the ‘scheduler-policy’ and the current kernel version running. The range is typically 1 to 99, but see the linux man pages for ‘sched’ for more details. If this value is not set, the current linux kernel default is left in place. +
+*Example:* scheduler-priority 50
+<thread-name> <count>::
+Set the number of threads for a given thread (by name). Some threads, like ‘stats’, have a fixed number of threads and cannot be changed. List of possible threads include (but not limited too): hqos-threads, workers +
+*Example:* hqos-threads 2
+
+[NOTE]
+====
+The “main” thread always occupies the lowest core-id specified in the DPDK [process-level] coremask.
+====
+
+Here’s a full-bore manual placement example:
+[options="nowrap" subs="+quotes,verbatim"]
+----
+/usr/bin/vpp  unix interactive tuntap disable cpu { main-thread-io coremask-workers 18 coremask-stats 4 } dpdk { coremask 1e }
+
+# taskset -a -p <vpe-pid>
+pid 16251's current affinity mask: 2        # main thread
+pid 16288's current affinity mask: ffffff   # DPDK interrupt thread (not bound to a core)
+pid 16289's current affinity mask: 4        # stats thread
+pid 16290's current affinity mask: 8        # worker thread 0
+pid 16291's current affinity mask: 10       # worker thread 1
+----
+
+
+=== Additional Parameters
+
+VPP supports other advanced configuration parameters. Below are the sections names, each with their own set of parameters. Further documentation on the advanced configuration parameters can be found in upstream documentation (link:https://wiki.fd.io/view/VPP/Command-line_Arguments[https://wiki.fd.io/view/VPP/Command-line_Arguments]).
+
+* acl-plugin
+* api-queue
+* api-segment
+* api-trace
+* buffers
+* cj
+* dns
+* heapsize
+* ip
+* ip6
+* l2learn
+* l2tp
+* logging
+* mactime
+* map
+* mc
+* nat
+* oam
+* plugins
+* plugin_path
+* punt
+* session
+* socketsvr
+* stats
+* statseg
+* tapcli
+* tcp
+* tls
+* tuntap
+* vhost-user
+* vlib
+
+

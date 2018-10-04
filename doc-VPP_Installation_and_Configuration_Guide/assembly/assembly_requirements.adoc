@@ -1,0 +1,16 @@
+[id='VPP_requirements']
+= Requirements
+
+// Included in:
+// Install
+
+:imagesdir: ../images
+:tskdir: ../procedure
+:cptdir: ../concept
+
+include::{cptdir}/concept_hardware-requirements.adoc[leveloffset=+1]
+
+include::{cptdir}/concept_os-requirements.adoc[leveloffset=+1]
+
+include::{cptdir}/concept_hugepages.adoc[leveloffset=+1]
+

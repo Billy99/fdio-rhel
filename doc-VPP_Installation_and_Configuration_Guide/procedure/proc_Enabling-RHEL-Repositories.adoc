@@ -1,0 +1,82 @@
+[id='Enabling_the_Red_Hat_Enterprise_Linux_Repositories_{context}'']
+= Enabling the Red Hat Enterprise Linux Repositories
+
+// Included in:
+// Installation Guide:
+
+To use a Red Hat Enterprise Linux machine as a host, you must register the system with the Content Delivery Network, attach the `Red Hat Enterprise Linux Server` and `Red Hat Enterprise Linux FDIO Early Access (RHEL 7 Server)` subscriptions, and enable the host repositories.
+
+.Procedure
+
+. Register your system with the Content Delivery Network, entering your Customer Portal user name and password when prompted: 
++
+[options="nowrap" subs="+quotes,verbatim"]
+----
+# subscription-manager register
+----
++
+. Find the `Red Hat Enterprise Linux Server` and `Red Hat Enterprise Linux FDIO Early Access (RHEL 7 Server)` subscription pools and note down the pool IDs: 
++
+[options="nowrap" subs="+quotes,verbatim"]
+----
+# subscription-manager list --available
+----
++
+. Use the pool IDs to attach the subscriptions to the system: 
++
+[options="nowrap" subs="+quotes,verbatim"]
+----
+# subscription-manager attach --pool=_poolid_
+----
++
+[NOTE]
+====
+To find out which subscriptions are currently attached, run:
+
+[options="nowrap" subs="+quotes,verbatim"]
+----
+# subscription-manager list --consumed
+----
+To list all enabled repositories, run:
+
+[options="nowrap" subs="+quotes,verbatim"]
+----
+# yum repolist
+----
+====
+. Disable all existing repositories: 
++
+[options="nowrap" subs="+quotes,verbatim"]
+----
+# subscription-manager repos --disable=*
+----
+. Enable the required repositories:
++	
+[options="nowrap" subs="+quotes,verbatim"]
+----
+# subscription-manager repos --enable=rhel-7-server-rpms
+# subscription-manager repos --enable=rhel-7-fdio-early-access-rpms
+----
+. Verify repositories are enabled:
++
+[options="nowrap" subs="+quotes,verbatim"]
+----
+# yum repolist
+Loaded plugins: product-id, search-disabled-repos, subscription-manager
+repo id                               repo name                                                     status
+rhel-7-fdio-early-access-rpms/x86_64  Red Hat Enterprise Linux Early Access (RHEL 7 Server) (RPMs)       8
+rhel-7-server-rpms/7Server/x86_64     Red Hat Enterprise Linux 7 Server (RPMs)                      21,064
+repolist: 21,072
+----
+. Ensure that all packages currently installed are up to date: 
++
+[options="nowrap" subs="+quotes,verbatim"]
+----
+# yum update
+----
++
+[NOTE]
+====
+Reboot the machine if any kernel related packages have been updated.
+====
+

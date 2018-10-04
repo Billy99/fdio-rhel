@@ -1,0 +1,7 @@
+[id='os-requirements_{context}']
+= Operating System Requirements
+
+// Included in:
+
+VPP must be installed on a base installation of Red Hat Enterprise Linux 7 that has been updated to the latest minor release.
+

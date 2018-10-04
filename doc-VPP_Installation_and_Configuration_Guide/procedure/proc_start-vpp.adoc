@@ -1,0 +1,26 @@
+= Starting VPP
+[id="start-vpp"]
+
+If all the pre-requisites have been met, VPP can now be started.
+
+.Procedure
+
+. Verify VPP is not already running:
++
+[options="nowrap" subs="+quotes,verbatim"]
+----
+# systemctl status vpp
+----
+. Start VPP:
++
+[options="nowrap" subs="+quotes,verbatim"]
+----
+# systemctl start vpp
+----
+. If you want VPP to start automatically on boot, enable VPP:
++
+[options="nowrap" subs="+quotes,verbatim"]
+----
+# systemctl enable vpp
+----
+

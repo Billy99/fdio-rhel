@@ -1,0 +1,27 @@
+= Red Hat VPP Installation and Configuration Guide
+:imagesdir: ./images
+:rfrdir: ./reference
+:tskdir: ./procedure
+:asmdir: ./assembly
+:cptdir: ./concept
+:vernum: 13
+:toc: left
+:toclevels: 3
+:sectnums:
+:sectnumlevels: 3
+:compat-mode:
+:doctype: book
+
+This document describes how to install Vector Packet Processing (VPP). VPP is a software based switch/router that runs in userspace.
+
+
+include::assembly/assembly_overview.adoc[leveloffset=+1]
+
+include::assembly/assembly_requirements.adoc[leveloffset=+1]
+
+include::assembly/assembly_install-RHEL.adoc[leveloffset=+1]
+
+include::assembly/assembly_config-start.adoc[leveloffset=+1]
+
+include::concept/concept_find-more-info.adoc[leveloffset=+1]
+

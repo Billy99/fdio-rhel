@@ -1,0 +1,25 @@
+[id='find-more-info_{context}']
+= Where I can I find more infromation about VPP?
+
+// Included in:
+
+[cols="30,70",options="header"]
+|===
+| Component 
+| Link
+
+| FD.io Page 
+| https://fd.io/[https://fd.io/]
+
+| Source Code 
+| https://gerrit.fd.io/r/gitweb?p=vpp.git;a=summary[https://gerrit.fd.io/r/gitweb?p=vpp.git;a=summary]
+
+| Upsteam Documentation
+| https://docs.fd.io/vpp/18.04/index.html[https://docs.fd.io/vpp/18.04/index.html]
+
+
+| Upstream Wiki Page 
+| https://wiki.fd.io/view/VPP[https://wiki.fd.io/view/VPP]
+
+|===
+

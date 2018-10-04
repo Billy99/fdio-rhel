@@ -1,0 +1,7 @@
+= What is VPP?
+[id="what-is-vpp"]
+
+FD.io (Fast data – Input/Output) is a collection of several projects and libraries. A key component of FD.io is the Vector Packet Processing (VPP) library. VPP is an extensible framework that provides out-of-the-box production quality switch/router functionality running in userspace. The design of VPP is hardware, kernel, and deployment (bare metal, VM, container) agnostic. It runs completely in userspace.
+
+VPP is, at it’s core, a scalable layer 2-4 network stack. It supports integration into both Open Stack and Kubernetes environments. It supports network management features including configuration, counters and sampling. It supports extending with plugins, tracing and debugging. It supports use cases such as vSwitch, vRouter, Gateways, Firewalls and Load Balancers, to name but a few. Finally it is useful both a software development kit or an appliance out of the box.
+
