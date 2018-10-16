@@ -1,0 +1,5 @@
+= Requirements
+[id="requirements"]
+
+The following section lists the deployment requirements for VPP to run on a system. To install and run VPP on Red Hat Enterprise Linux, you must ensure that you have enough computer resources available. Review the requirements in the following sections before installing VPP.
+

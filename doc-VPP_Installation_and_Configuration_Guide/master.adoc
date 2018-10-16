@@ -1,27 +1,55 @@
-= Red Hat VPP Installation and Configuration Guide
-:imagesdir: ./images
-:rfrdir: ./reference
-:tskdir: ./procedure
-:asmdir: ./assembly
-:cptdir: ./concept
-:vernum: 13
+[id='assembly_VPP-installation-guide']
+
+//include::_artifacts/document-attributes.adoc[] - specific to BA docs
+//include::_artifacts/author-group.adoc[] specific to BA docs
+
+
+= VPP Installation and Configuration Guide on Red Hat Enterprise Linux
+// Context attribute is assembly specific and enables module reuse between assemblies.
+:doctype: book
+:context: installing-vpp
+:vernum: 2
 :toc: left
 :toclevels: 3
-:sectnums:
-:sectnumlevels: 3
+//:sectnums:
+//:sectnumlevels: 3
 :compat-mode:
-:doctype: book
+:tskdir: procedure
+:cptdir: concept
+:rfrdir: reference
+:imagesdir: images
 
-This document describes how to install Vector Packet Processing (VPP). VPP is a software based switch/router that runs in userspace.
+This document describes how to install and configure Vector Packet Processing (VPP) on Red Hat Enterprise Linux. VPP is a software based switch/router that runs in userspace.
+
+.Prerequisite
+A base installation of Red Hat Enterprise Linux 7 that has been updated to the latest minor release is available.
+Your system meets the minimum requirements list in (xref to  Requirements).
+
+// Overview
+include::{cptdir}/concept_what-is-vpp.adoc[leveloffset=+1]
+include::{cptdir}/concept_graph-nodes.adoc[leveloffset=+2]
+include::{cptdir}/concept_feature-set.adoc[leveloffset=+2]
+
+// Requirements
+include::{cptdir}/concept_requirements.adoc[leveloffset=+1]
+include::{rfrdir}/reference_hardware-requirements.adoc[leveloffset=+2]
+include::{cptdir}/concept_os-requirements.adoc[leveloffset=+2]
+include::{cptdir}/concept_hugepages.adoc[leveloffset=+2]
+
+// Installation
+include::{cptdir}/concept_installation.adoc[leveloffset=+1]
+include::{tskdir}/proc_Enabling-RHEL-Repositories.adoc[leveloffset=+2]
+include::{rfrdir}/reference_packages.adoc[leveloffset=+2]
+include::{tskdir}/proc_Install-VPP.adoc[leveloffset=+2]
+
+// Start And Configure
+include::{cptdir}/concept_start-config.adoc[leveloffset=+1]
+include::{tskdir}/proc_start-vpp.adoc[leveloffset=+2]
+include::{rfrdir}/reference_config-vpp.adoc[leveloffset=+2]
+
+// More Info
+include::{cptdir}/concept_find-more-info.adoc[leveloffset=+1]
 
 
-include::assembly/assembly_overview.adoc[leveloffset=+1]
-
-include::assembly/assembly_requirements.adoc[leveloffset=+1]
-
-include::assembly/assembly_install-RHEL.adoc[leveloffset=+1]
-
-include::assembly/assembly_config-start.adoc[leveloffset=+1]
-
-include::concept/concept_find-more-info.adoc[leveloffset=+1]
-
+// Versioning info
+//include::_artifacts/versioning-information.adoc[] specific to BA

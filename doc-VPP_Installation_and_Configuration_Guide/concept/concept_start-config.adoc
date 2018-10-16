@@ -1,0 +1,5 @@
+= Start and Configuration
+[id="start-config"]
+
+This section shows how to start VPP on Red Hat Enterprise Linux 7 with a default configuration which works for basic installations. Then details are provided for tailoring the configuration for specific scenarios.
+
