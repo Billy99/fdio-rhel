@@ -1,5 +1,5 @@
 [id='find-more-info_{context}']
-= Where I can I find more infromation about VPP?
+= Where I can I find more information about VPP?
 
 // Included in:
 
@@ -14,7 +14,7 @@
 | Source Code 
 | https://gerrit.fd.io/r/gitweb?p=vpp.git;a=summary[https://gerrit.fd.io/r/gitweb?p=vpp.git;a=summary]
 
-| Upsteam Documentation
+| Upstream Documentation
 | https://docs.fd.io/vpp/18.04/index.html[https://docs.fd.io/vpp/18.04/index.html]
 
 

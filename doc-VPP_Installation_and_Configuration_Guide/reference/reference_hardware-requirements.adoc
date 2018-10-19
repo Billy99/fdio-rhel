@@ -9,9 +9,7 @@ The minimum and recommended hardware requirements are outlined here. In general,
 [options="header"]
 |====
 |Resource |Minimum |Recommended
-|CPU |A dual core CPU. |A quad core CPU or multiple dual core CPUs.
 |Memory - Hugepage Support |Number of Pages: 512  Pagesize: 2048 kB |Number of Pages: 1024  Pagesize: 2048 kB
-|Hard Disk |500 MB of locally accessible, writable disk space. |2 GB of locally accessible, writable disk space.
 |Network Interface |See below. |See below.
 |====
 

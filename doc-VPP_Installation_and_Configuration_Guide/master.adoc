@@ -21,9 +21,9 @@
 
 This document describes how to install and configure Vector Packet Processing (VPP) on Red Hat Enterprise Linux. VPP is a software based switch/router that runs in userspace.
 
-.Prerequisite
-A base installation of Red Hat Enterprise Linux 7 that has been updated to the latest minor release is available.
-Your system meets the minimum requirements list in (xref to  Requirements).
+.Prerequisites
+* A base installation of Red Hat Enterprise Linux 7 that has been updated to the latest minor release that is available.
+* Your system meets the minimum requirements listed in xref:Requirements[].
 
 // Overview
 include::{cptdir}/concept_what-is-vpp.adoc[leveloffset=+1]

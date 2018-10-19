@@ -5,6 +5,7 @@ tmp
 *.tar.gz
 .directory
 *.html
+*.pdf
 /.project
 */build
 .DS_Store

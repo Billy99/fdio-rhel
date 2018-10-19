@@ -29,7 +29,7 @@ VPP is ever evolving and features constantly being added. The following is a sum
 *IPv4/IPv6*
 
 * 14+ MPPS, single core
-* Multimillion entry FIBs
+* Multi-million entry FIBs
 * Input Checks
 ** Source RPF
 ** TTL expiration

@@ -228,7 +228,7 @@ log-level emergency|alert|critical|error|warning|notice|info|debug::
 Set the log level for DPDK logs. Default is ‘notice’. +
 *Example:* log-level error
 dev default { .. }::
-Change default settings for all intefaces. This sections supports the same set of custom parameters described in ‘dev <pci-dev> { .. }’. +
+Change default settings for all interfaces. This sections supports the same set of custom parameters described in ‘dev <pci-dev> { .. }’. +
 *Example:* +
 dev default { +
     num-rx-queues 3 +
@@ -237,7 +237,7 @@ dev default { +
 
 === “cpu” Parameters
 
-Command-line CPU configuration controls the creation of named thread types, and the cpu affinity thereof. In the VPP there is one main thread and optionally the user can create worker(s). The main thread and worker thread(s) can be pinned to CPU core(s) automatically or manually.
+Command-line CPU configuration controls the creation of named thread types, and the CPU affinity thereof. In the VPP there is one main thread and optionally the user can create worker(s). The main thread and worker thread(s) can be pinned to CPU core(s) automatically or manually.
 
 ==== Automatic Pinning:
 
@@ -284,7 +284,7 @@ thread-prefix <prefix>::
 Set a prefix to be prepended to each thread name. The thread name already contains an underscore. If not provided, the default is ‘vpp’. Currently, prefix used on threads: ‘vpp_main’, ‘vpp_stats’ +
 *Example:* thread-prefix vpp1
 scheduler-priority <n>::
-Set the scheduler priority. Only valid if the ‘scheduler-policy’ is set to ‘fifo’ or ‘rr’. The valid ranges for the scheduler priority depends on the ‘scheduler-policy’ and the current kernel version running. The range is typically 1 to 99, but see the linux man pages for ‘sched’ for more details. If this value is not set, the current linux kernel default is left in place. +
+Set the scheduler priority. Only valid if the ‘scheduler-policy’ is set to ‘fifo’ or ‘rr’. The valid ranges for the scheduler priority depends on the ‘scheduler-policy’ and the current kernel version running. The range is typically 1 to 99, but see the Linux man pages for ‘sched’ for more details. If this value is not set, the current Linux kernel default is left in place. +
 *Example:* scheduler-priority 50
 <thread-name> <count>::
 Set the number of threads for a given thread (by name). Some threads, like ‘stats’, have a fixed number of threads and cannot be changed. List of possible threads include (but not limited too): hqos-threads, workers +

@@ -5,7 +5,7 @@
 
 This section identifies the different VPP packages and describes their contents. Installing the `vpp` package will also install `vpp-lib` and `vpp-selinux-policy` packages, and is the minimum set of packages that can be installed. It is recommended to install all the packages.
 
-== vpp
+.vpp
 
 Vector Packet Processing executables. This is the primary package that must be installed to use VPP. This package contains:
 
@@ -13,7 +13,7 @@ Vector Packet Processing executables. This is the primary package that must be i
 * vpp_api_test - vector packet engine API test tool
 * vpp_json_test - vector packet engine JSON test tool
 
-== vpp-lib
+.vpp-lib
 
 Vector Packet Processing runtime libraries. The ‘vpp’ package depends on this package, so it will always be installed. This package contains the VPP shared libraries, including:
 
@@ -23,7 +23,7 @@ Vector Packet Processing runtime libraries. The ‘vpp’ package depends on thi
 * vlib-api - binary API library
 * vnet - network stack library
 
-== vpp-plugins
+.vpp-plugins
 
 Vector Packet Processing plugin modules.
 
@@ -41,23 +41,23 @@ Vector Packet Processing plugin modules.
 * sixrd
 * stn
 
-== vpp-dev
+.vpp-dev
 
 Vector Packet Processing development support. This package contains development support files for the VPP libraries.
 
-== vpp-api-java
+.vpp-api-java
 
 JAVA binding for the VPP Binary API.
 
-== vpp-api-python
+.vpp-api-python
 
 Python binding for the VPP Binary API.
 
-== vpp-api-lua
+.vpp-api-lua
 
 Lua binding for the VPP Binary API.
 
-== vpp-selinux-policy
+.vpp-selinux-policy
 
 This package contains the VPP Custom SELinux Policy. The ‘vpp’ package depends on this package, so it will always be installed. It will not enable SELinux on the system. It will install a Custom VPP SELinux policy that will be used if SELinux is enabled at any time.
 

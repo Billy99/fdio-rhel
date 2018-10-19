@@ -1,5 +1,5 @@
 = Installation
 [id="installation"]
 
-Complete the following section to install VPP on Red Hat Enterprise Linux 7.
+This section describes the steps needed to install VPP on Red Hat Enterprise Linux 7. It includes which repositories need to be enabled, a description of each package associated with VPP, and how to install those packages. 
 

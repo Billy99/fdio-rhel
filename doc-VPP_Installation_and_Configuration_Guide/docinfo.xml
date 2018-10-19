@@ -1,0 +1,12 @@
+<title>VPP Installation and Configuration Guide on Red Hat Enterprise Linux</title>
+<productname>VPP on Red Hat Enterprise Linux</productname>
+<productnumber>18.04</productnumber>
+<subtitle>Installation and configuration details for installing VPP on Red Hat Enterprise Linux.</subtitle>
+<abstract><para>This document contains instructions for installing and configuring VPP on Red Hat Enterprise Linux.</para></abstract>
+<authorgroup id="Author_Group">
+        <author>
+                <firstname>Red Hat FD.io</firstname>
+                <surname>Documentation Team</surname>
+        </author>
+</authorgroup>
+
